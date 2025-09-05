@@ -91,6 +91,14 @@ public class StringTest {
     }
 
     @Test
+    @DisplayName("indexOf는 중복된 값이 있으면 가장 앞에 있는 값의 인덱스를 반환한다.")
+    void indexOf_중복값() {
+        String str = "abbaabb";
+        int firstIndex = str.indexOf("b");
+        assertEquals(1, firstIndex);
+    }
+
+    @Test
     @DisplayName("indexOf는 찾는 문자열이 없으면 -1을 반환한다. (예외 X)")
     void indexOf_없는문자열() {
         String str = "abcdefghij";
