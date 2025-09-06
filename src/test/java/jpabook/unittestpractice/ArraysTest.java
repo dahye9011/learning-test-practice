@@ -151,4 +151,37 @@ public class ArraysTest {
         assertEquals(3, arrList.size());
         assertEquals("a", arrList.get(0));
     }
+
+    @Test
+    @DisplayName("1차원 배열은 Arrays.equals로 내용을 비교한다 (assertArrayEquals 권장)")
+    void equalsTest_1차원배열() {
+        // given
+        String[] arr = {"a", "b", "c"};
+        String[] arr2 = {"a", "b", "c"};
+
+        // when
+        boolean result = Arrays.equals(arr, arr2);
+
+        // then
+        assertTrue(result);
+        assertArrayEquals(arr, arr2);
+    }
+    
+    @Test
+    @DisplayName("2차원 배열의 내용 비교는 deepEquals를 사용한다.")
+    void equalsTest_2차원배열() {
+        // given
+        String[][] arr = {{"a", "b"},
+                {"c", "d"}
+        };
+        String[][] arr2 = {{"a", "b"},
+                {"c", "d"}
+        };
+
+        // when
+        boolean result = Arrays.deepEquals(arr, arr2);
+
+        // then
+        assertTrue(result);
+    }
 }
