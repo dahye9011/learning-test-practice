@@ -44,7 +44,7 @@ public class ArraysTest {
         // when
         Arrays.sort(arr, new Comparator<Integer>() {
             public int compare(Integer a, Integer b) {
-                return b - a;
+                return Integer.compare(b, a);
             }
         });
 
@@ -139,7 +139,20 @@ public class ArraysTest {
     }
 
     @Test
-    @DisplayName("asList는 배열을 고정 크기 리스트로 변환한다. (add, remove 불가)")
+    @DisplayName("copyOfRange는 배열의 특정 범위를 복사하여 새로운 배열을 만든다.")
+    void copyOfRangeTest() {
+        // given
+        int[] arr = {1, 2, 3, 4, 5};
+
+        // when
+        int[] copiedArr = Arrays.copyOfRange(arr, 1, 4);
+
+        // then
+        assertArrayEquals(new int[]{2, 3, 4}, copiedArr);
+    }
+
+    @Test
+    @DisplayName("asList는 배열을 고정 크기 리스트로 변환한다.")
     void asListTest() {
         // given
         String[] arr = {"a", "b", "c"};
@@ -150,6 +163,32 @@ public class ArraysTest {
         // then
         assertEquals(3, arrList.size());
         assertEquals("a", arrList.get(0));
+    }
+
+    @Test
+    void asListTest_값변경() {
+        String[] arr = {"a", "b", "c"};
+        List<String> arrList = Arrays.asList(arr);
+
+        arr[0] = "z";
+        assertEquals("z", arrList.get(0));
+
+        arrList.set(1, "y");
+        assertEquals("y", arr[1]);
+    }
+
+    @Test
+    @DisplayName("asList로 변환한 리스트에 add, remove를 하면 UnsupportedOperationException이 발생한다.")
+    void asListTest_예외() {
+        String[] arr = {"a", "b", "c"};
+        List<String> arrList = Arrays.asList(arr);
+
+        assertThrows(UnsupportedOperationException.class, () -> {
+            arrList.add("d");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            arrList.remove("a");
+        });
     }
 
     @Test
@@ -165,8 +204,26 @@ public class ArraysTest {
         // then
         assertTrue(result);
         assertArrayEquals(arr, arr2);
+        assertNotSame(arr, arr2); // 내용은 같지만 다른 객체!
     }
-    
+
+    @Test
+    @DisplayName("1차원 배열의 내용이나 길이가 다르면 false를 반환한다.")
+    void equalsTest_1차원배열_예외() {
+        // given
+        String[] arr = {"a", "b", "c"};
+        String[] arr2 = {"a", "b", "d"}; // 다른 내용
+        String[] arr3 = {"a", "b", "c", "d"}; // 다른 길이
+
+        // when
+        boolean result = Arrays.equals(arr, arr2);
+        boolean result2 = Arrays.equals(arr, arr3);
+
+        // then
+        assertFalse(result);
+        assertFalse(result2);
+    }
+
     @Test
     @DisplayName("2차원 배열의 내용 비교는 deepEquals를 사용한다.")
     void equalsTest_2차원배열() {
@@ -180,8 +237,34 @@ public class ArraysTest {
 
         // when
         boolean result = Arrays.deepEquals(arr, arr2);
+        boolean result2 = Arrays.equals(arr, arr2);
 
         // then
         assertTrue(result);
+        assertFalse(result2); // 2차원 배열은 equals로 비교 X
     }
+
+    @Test
+    @DisplayName("2차원 배열의 내용이나 길이가 다르면 false를 반환한다.")
+    void equalsTest_2차원배열_예외() {
+        // given
+        String[][] arr = {{"a", "b"},
+                {"c", "d"}
+        };
+        String[][] arr2 = {{"a", "b"},
+                {"c", "e"}
+        }; // 다른 내용
+        String[][] arr3 = {{"a", "b", "c"},
+                {"d"}
+        }; // 다른 길이
+
+        // when
+        boolean result = Arrays.deepEquals(arr, arr2);
+        boolean result2 = Arrays.deepEquals(arr, arr3);
+
+        // then
+        assertFalse(result);
+        assertFalse(result2);
+    }
+
 }
