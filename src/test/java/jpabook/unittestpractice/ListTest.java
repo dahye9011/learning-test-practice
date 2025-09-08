@@ -143,6 +143,19 @@ public class ListTest {
     }
 
     @Test
+    @DisplayName("lastIndexOf는 중복 요소가 있을 때, 마지막 위치를 찾는다.")
+    void lastIndexOfTest() {
+        // given
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "B", "B"));
+
+        // when
+        int lastIndex = list.lastIndexOf("B");
+
+        // then
+        assertEquals(4, lastIndex);
+    }
+
+    @Test
     @DisplayName("Arrays.asList는 크기 변경 연산(add/remove/clear)을 지원하지 않는다.")
     void asListTest() {
         List<String> list = Arrays.asList("A", "B", "C");
@@ -152,5 +165,31 @@ public class ListTest {
                 () -> assertThrows(UnsupportedOperationException.class, () -> list.remove("B")),
                 () -> assertThrows(UnsupportedOperationException.class, list::clear)
         );
+    }
+
+    @Test
+    @DisplayName("toArray는 리스트를 배열로 변환한다.")
+    void toArrayTest() {
+        // given
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+
+        // when
+        Integer[] arr = list.toArray(new Integer[0]); // 크기 0은 무시, 타입만 맞추면 됨
+
+        // then
+        assertArrayEquals(new Integer[]{1, 2, 3, 4, 5}, arr);
+    }
+
+    @Test
+    @DisplayName("isEmpty는 리스트가 비어있는지 확인한다.")
+    void isEmptyTest() {
+        // given
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+
+        // when
+        boolean result = list.isEmpty();
+
+        // then
+        assertFalse(result);
     }
 }
