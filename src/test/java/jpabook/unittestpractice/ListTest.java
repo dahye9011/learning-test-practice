@@ -77,6 +77,59 @@ public class ListTest {
     }
 
     @Test
+    @DisplayName("subList는 fromIndex부터 toIndex - 1까지의 요소를 반환한다.")
+    void subListTest() {
+        // given
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E"));
+
+        // when
+        List<String> result = list.subList(1, 4);
+
+        // then
+        assertIterableEquals(Arrays.asList("B", "C", "D"), result);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    @DisplayName("subList는 원본 리스트와 연결된 뷰다.")
+    void subListViewTest() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E"));
+        List<String> sub = list.subList(1, 4); // B, C, D
+
+        sub.set(0, "X");
+        assertEquals("X", list.get(1));
+
+        list.set(3, "Y");
+        assertEquals("Y", sub.get(2));
+    }
+
+    @Test
+    @DisplayName("subList add/remove는 원본에 반영된다")
+    void subListViewTest2() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E"));
+        List<String> sub = list.subList(1, 4); // B, C, D
+
+        sub.add("X"); // 부모 리스트의 toIndex 위치에 삽입
+        sub.remove("C");
+
+        assertIterableEquals(Arrays.asList("A", "B", "D", "X", "E"), list);
+    }
+
+    @Test
+    @DisplayName("없는 인덱스에 subList를 하면 IndexOutOfBoundsException이 발생한다.")
+    void subList_없는인덱스() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        assertThrows(IndexOutOfBoundsException.class, () -> list.subList(-1, 4));
+    }
+
+    @Test
+    @DisplayName("fromIndex > toIndex인 경우 IllegalArgumentException이 발생한다.")
+    void subList_인덱스순서() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        assertThrows(IllegalArgumentException.class, () -> list.subList(3, 1));
+    }
+
+    @Test
     @DisplayName("set은 해당 인덱스의 데이터를 변경한다.")
     void setTest() {
         // given
@@ -191,5 +244,44 @@ public class ListTest {
 
         // then
         assertFalse(result);
+    }
+
+    @Test
+    @DisplayName("addAll은 여러 요소를 일괄 추가한다. (중복/순서 유지)")
+    void addAllTest() {
+        // given
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
+
+        // when
+        list.addAll(Arrays.asList("D", "E"));
+
+        // then
+        assertIterableEquals(Arrays.asList("A", "B", "C", "D", "E"), list);
+    }
+
+    @Test
+    @DisplayName("removeAll은 인자로 준 컬렉션에 포함된 값과 같은 모든 원소를 삭제한다.")
+    void removeAllTest() {
+        // given
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "B", "C", "C"));
+
+        // when
+        list.removeAll(Arrays.asList("A", "C"));
+
+        // then
+        assertIterableEquals(Arrays.asList("B", "B"), list);
+    }
+
+    @Test
+    @DisplayName("retainAll은 인자로 준 컬렉션에 포함된 값만 남기고 나머지는 제거한다. (중복/순서 유지)")
+    void retainAllTest() {
+        // given
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "A"));
+
+        // when
+        list.retainAll(Arrays.asList("A", "E"));
+
+        // then
+        assertIterableEquals(Arrays.asList("A", "E", "A"), list);
     }
 }
