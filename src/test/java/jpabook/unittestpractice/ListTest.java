@@ -37,7 +37,7 @@ public class ListTest {
         list.add("C");
 
         // when
-        // list.remove("C");
+        // list.remove("C"); remove(Object o)는 해당 값을 찾아 삭제 (첫 번째 발생만)
         list.remove(2);
 
         // then
@@ -113,6 +113,7 @@ public class ListTest {
         sub.remove("C");
 
         assertIterableEquals(Arrays.asList("A", "B", "D", "X", "E"), list);
+        assertIterableEquals(Arrays.asList("B", "D", "X"), sub);
     }
 
     @Test
@@ -127,6 +128,18 @@ public class ListTest {
     void subList_인덱스순서() {
         List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
         assertThrows(IllegalArgumentException.class, () -> list.subList(3, 1));
+    }
+
+    @Test
+    @DisplayName("원본 리스트의 구조를 변경하고, subList한 리스트의 메서드를 호출하면 ConcurrentModificationException이 발생한다.")
+    void subList_구조변경() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E"));
+        List<String> sub = list.subList(1, 4); // B, C, D
+
+        list.add("X");
+
+        assertThrows(ConcurrentModificationException.class, () -> sub.size());
+        assertThrows(ConcurrentModificationException.class, () -> sub.get(0));
     }
 
     @Test
