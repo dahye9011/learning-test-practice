@@ -28,7 +28,7 @@ public class LinkedListTest {
     }
 
     @Test
-    @DisplayName("맨앞 혹은 맨뒤에 데이터를 추가한다.")
+    @DisplayName("addFirst로 맨앞에 데이터를 추가하고, addLast로 맨뒤에 데이터를 추가한다.")
     void addFirstAndLastTest() {
         // given
         LinkedList<String> list = new LinkedList<>(Arrays.asList("A", "B", "C"));
@@ -58,7 +58,7 @@ public class LinkedListTest {
     }
 
     @Test
-    @DisplayName("맨앞 혹은 맨뒤에 데이터를 삭제한다.")
+    @DisplayName("removeFirst로 맨앞에 데이터를 삭제하고, removeLast로 맨뒤에 데이터를 삭제한다.")
     void removeFirstAndLastTest() {
         // given
         LinkedList<String> list = new LinkedList<>(Arrays.asList("A", "B", "C"));
@@ -80,7 +80,17 @@ public class LinkedListTest {
     }
 
     @Test
-    void p
+    @DisplayName("인덱스 범위를 벗어나면 IndexOutOfBoundsException이 발생한다.")
+    void indexOutOfBoundTest() {
+        LinkedList<Number> list = new LinkedList<>();
+
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(3));
+        assertThrows(IndexOutOfBoundsException.class, () -> list.add(5, 4));
+    }
 
     @Test
     @DisplayName("중간에 데이터를 삽입/삭제할 수 있다. 데이터의 이동은 없고, 앞뒤 노드의 참조만 변경된다.")
@@ -92,6 +102,21 @@ public class LinkedListTest {
 
         list.remove(2); // 중간 삭제
         assertEquals(Arrays.asList("A", "X", "C", "D"), list);
+    }
+
+    @Test
+    @DisplayName("LinkedList는 null이나 중복 요소를 허용한다.")
+    void nullAndDuplicatesTest() {
+        LinkedList<String> list = new LinkedList<>();
+
+        list.add(null);
+        list.add("A");
+        list.add("A");
+
+        assertTrue(list.contains(null));
+        assertEquals(3, list.size());
+        assertEquals("A", list.get(1));
+        assertEquals("A", list.getLast());
     }
 
     @Test
@@ -127,5 +152,80 @@ public class LinkedListTest {
 
         // then
         assertArrayEquals(new String[]{"A", "B", "C"}, array);
+    }
+
+    @Test
+    void iteratorTest() {
+        // given
+        LinkedList<String> list = new LinkedList<>();
+
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        // when
+        Iterator<String> iterator = list.iterator();
+
+        // then
+        assertTrue(iterator.hasNext());
+        assertEquals("A", iterator.next());
+    }
+
+    @Test
+    @DisplayName("contain은 요소가 LinkedList에 포함되어 있는지 확인한다.")
+    void containTest() {
+        // given
+        LinkedList<String> list = new LinkedList<>();
+
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        // when
+        boolean result = list.contains("A");
+
+        // then
+        assertTrue(result);
+    }
+
+
+    @Test
+    @DisplayName("containsAll은 모든 요소가 LinkedList에 포함되어 있는지 확인한다.")
+    void containsAllTest() {
+        // given
+        LinkedList<String> list1 = new LinkedList<>();
+
+        list1.add("A");
+        list1.add("B");
+        list1.add("C");
+
+        LinkedList<String> list2 = new LinkedList<>();
+
+        list2.add("A");
+        list2.add("B");
+
+        // when
+        boolean result = list1.containsAll(list2);
+
+        // then
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("clear는 LinkedList의 모든 요소를 삭제한다.")
+    void clearTest() {
+        // given
+        LinkedList<Number> list = new LinkedList<>();
+
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        // when
+        list.clear();
+
+        // then
+        assertTrue(list.isEmpty());
+        assertEquals(0, list.size());
     }
 }
