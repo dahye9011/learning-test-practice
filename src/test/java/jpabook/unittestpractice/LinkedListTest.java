@@ -155,6 +155,7 @@ public class LinkedListTest {
     }
 
     @Test
+    @DisplayName("Iterator로 LinkedList를 순회할 수 있다.")
     void iteratorTest() {
         // given
         LinkedList<String> list = new LinkedList<>();
@@ -172,8 +173,57 @@ public class LinkedListTest {
     }
 
     @Test
-    @DisplayName("contain은 요소가 LinkedList에 포함되어 있는지 확인한다.")
-    void containTest() {
+    @DisplayName("구조 변경 후 기존 iterator 사용 시 ConcurrentModificationException이 발생한다.")
+    void iteratorTest_예외() {
+        LinkedList<String> list = new LinkedList<>();
+
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        Iterator<String> iterator = list.iterator();
+
+        list.add("X");
+
+        assertThrows(ConcurrentModificationException.class, iterator::next);
+    }
+
+    @Test
+    @DisplayName("Iterator의 remove는 직전에 반환된 요소를 삭제한다.")
+    void iteratorRemoveTest() {
+        // given
+        LinkedList<Number> list = new LinkedList<>();
+
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        // when
+        Iterator<Number> iterator = list.iterator();
+        iterator.next();
+        iterator.remove();
+
+        assertEquals(2, list.size());
+        assertEquals(List.of(2, 3), list);
+    }
+
+    @Test
+    @DisplayName("Iterator의 remove는 반드시 next로 요소를 가져오고 사용해야 한다.")
+    void iteratorRemoveTest_예외() {
+        LinkedList<Integer> list = new LinkedList<>();
+
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> iterator = list.iterator();
+
+        assertThrows(IllegalStateException.class, iterator::remove);
+    }
+
+    @Test
+    @DisplayName("contains는 요소가 LinkedList에 포함되어 있는지 확인한다.")
+    void containsTest() {
         // given
         LinkedList<String> list = new LinkedList<>();
 
