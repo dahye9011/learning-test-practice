@@ -58,7 +58,7 @@ public class LinkedListTest {
     }
 
     @Test
-    @DisplayName("removeFirst로 맨앞에 데이터를 삭제하고, removeLast로 맨뒤에 데이터를 삭제한다.")
+    @DisplayName("removeFirst로 맨 앞의 데이터를 삭제하고, removeLast로 맨뒤에 데이터를 삭제한다.")
     void removeFirstAndLastTest() {
         // given
         LinkedList<String> list = new LinkedList<>(Arrays.asList("A", "B", "C"));
@@ -173,7 +173,7 @@ public class LinkedListTest {
     }
 
     @Test
-    @DisplayName("구조 변경 후 기존 iterator 사용 시 ConcurrentModificationException이 발생한다.")
+    @DisplayName("구조 변경 후, 기존 iterator 사용 시 ConcurrentModificationException이 발생한다.")
     void iteratorTest_예외() {
         LinkedList<String> list = new LinkedList<>();
 
@@ -208,7 +208,7 @@ public class LinkedListTest {
     }
 
     @Test
-    @DisplayName("Iterator의 remove는 반드시 next로 요소를 가져오고 사용해야 한다.")
+    @DisplayName("Iterator의 remove는 next로 요소를 가져오지 않고 사용하면 IllegalStateException이 발생한다.")
     void iteratorRemoveTest_예외() {
         LinkedList<Integer> list = new LinkedList<>();
 
@@ -277,5 +277,50 @@ public class LinkedListTest {
         // then
         assertTrue(list.isEmpty());
         assertEquals(0, list.size());
+    }
+
+    @Test
+    @DisplayName("스택 메서드를 사용할 수 있다. 요소가 없을 때는 NoSuchElementException이 발생한다.")
+    void stackMethodTest() {
+        // given
+        LinkedList<String> stack = new LinkedList<>();
+
+        // when
+        stack.push("A");
+        stack.push("B");
+        stack.push("C");
+
+        // then
+        assertEquals("C", stack.pop());
+        assertEquals("B", stack.pop());
+        assertEquals("A", stack.peek());
+        assertEquals(1, stack.size());
+
+        stack.pop();
+        assertTrue(stack.isEmpty());
+
+        assertThrows(NoSuchElementException.class, stack::pop);
+    }
+
+    @Test
+    @DisplayName("큐 메서드를 사용할 수 있다. 요소가 없을 때는 null을 반환한다.")
+    void queueMethodTest() {
+        // given
+        LinkedList<String> queue = new LinkedList<>();
+
+        // when
+        queue.offer("A");
+        queue.offer("B");
+        queue.offer("C");
+
+        // then
+        assertEquals("A", queue.poll());
+        assertEquals("B", queue.poll());
+        assertEquals("C", queue.peek());
+
+        queue.poll();
+        assertTrue(queue.isEmpty());
+
+        assertNull(queue.poll());
     }
 }
