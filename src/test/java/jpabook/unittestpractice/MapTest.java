@@ -1,5 +1,6 @@
 package jpabook.unittestpractice;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MapTest {
     @Test
+    @DisplayName("Map의 기본 동작")
     public void hashMap_basic_behaviors() {
         // Map 인터페이스로 선언하고, HashMap 구현체 사용
         Map<String, String> hm = new HashMap<>();

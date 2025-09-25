@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SetTest {
     @Test
+    @DisplayName("Set의 기본 동작")
     public void hashSet_basic_behaviors() {
         // Set 인터페이스로 선언하고, HashSet 구현체 사용
         Set<Integer> hs = new HashSet<>();
