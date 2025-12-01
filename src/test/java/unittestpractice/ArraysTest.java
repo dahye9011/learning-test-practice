@@ -1,4 +1,4 @@
-package jpabook.unittestpractice;
+package unittestpractice;
 
 
 import org.junit.jupiter.api.DisplayName;
